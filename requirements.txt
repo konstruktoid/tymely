@@ -1,9 +1,3 @@
-argparse
-certifi
-datetime
-os
-random
-ssl
-sys
-urllib3
-yaml
+certifi >= 2020.6.20
+urllib3 >= 1.25.10
+yamllint >= 1.25.0
