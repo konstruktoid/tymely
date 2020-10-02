@@ -1,9 +1,6 @@
 argparse
 certifi
 datetime
-os
-random
+pyyaml
 ssl
-sys
 urllib3
-yaml
