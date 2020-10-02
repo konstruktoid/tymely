@@ -19,13 +19,11 @@ using NTP](https://github.com/konstruktoid/hardening/issues/80).
 
 Uninstall `ntpd`, `chrony` and other applications using NTP.
 
-Use `cron` or systemd timers to manually set the date and time.
+In order to disable `sntp` functionality in `systemd`, run
+`sudo timedatectl set-ntp 0` and verify with
+`sudo systemctl status systemd-timesyncd.service`.
 
-In order to disable `sntp` functionality in `systemd`:
-
-```
-sudo timedatectl set-ntp 0
-```
+Use `cron` or systemd timers to execute `tymely`.
 
 ## Usage
 
@@ -45,7 +43,7 @@ If no configuration file is used,`tymely` will use `https://duckduckgo.com`
 as the site to fetch the `HTTP-date` from, use `tymely/<version>` as user agent,
 and set the system date to the returned `HTTP-date`.
 
-### Configuration file options
+## Configuration file options
 
 The configuration file should be in valid `YAML` format.
 
@@ -93,5 +91,8 @@ Wed, 05 Aug 2020 20:51:21 GMT
 
 <https://tools.ietf.org/html/rfc7231#section-7.1.1.2>
 
+<https://www.whonix.org/wiki/Time_Attacks>
+
 <https://gitlab.com/madaidan/secure-time-sync>
+
 <https://github.com/ioerror/tlsdate>
