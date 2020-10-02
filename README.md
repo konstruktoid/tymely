@@ -80,11 +80,18 @@ from the lists presented in the file, and verbosely return any information.
 $ ./tymely.py -c tymely.yaml -t
 Verbose mode enabled
 Configuration file: tymely.yaml
-{'verbose': 1, 'sites': ['cloudflare.com', 'duckduckgo.com', 'github.com', 'stackoverflow.com', 'xkcd.com'], 'user_agents': ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36', 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0']}
-URL: xkcd.com
-User agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36
-Response headers: HTTPHeaderDict({'Connection': 'keep-alive', 'Content-Length': '6552', 'Server': 'nginx', 'Content-Type': 'text/html; charset=UTF-8', 'Last-Modified': 'Wed, 05 Aug 2020 04:00:03 GMT', 'ETag': '"5f2a2ec3-1998"', 'Expires': 'Wed, 05 Aug 2020 04:05:52 GMT', 'Cache-Control': 'max-age=300', 'Accept-Ranges': 'bytes', 'Date': 'Wed, 05 Aug 2020 20:51:21 GMT', 'Via': '1.1 varnish', 'Age': '229', 'X-Served-By': 'cache-cph20623-CPH', 'X-Cache': 'HIT', 'X-Cache-Hits': '1', 'X-Timer': 'S1596660681.304391,VS0,VE1', 'Vary': 'Accept-Encoding'})
-Wed, 05 Aug 2020 20:51:21 GMT
+{'verbose': 1, 'sites': ['cloudflare.com', 'duckduckgo.com', 'github.com', 'stackoverflow.com', 'xkcd.com'], 'user_agents': ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.
+169 Safari/537.36', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36', 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like
+Gecko', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0']}
+URL: duckduckgo.com
+User agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36
+Response headers: HTTPHeaderDict({'Server': 'nginx', 'Date': 'Fri, 02 Oct 2020 17:45:11 GMT', 'Content-Type': 'text/html; charset=UTF-8', 'Content-Length': '5763', 'Connection': 'keep-alive', 'Vary': 'Accept-Encoding', 'ETag': '"5
+f761b76-1683"', 'Strict-Transport-Security': 'max-age=31536000', 'X-Frame-Options': 'SAMEORIGIN', 'Content-Security-Policy': "default-src https: blob: data: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self'", 'X-XSS-Protection
+': '1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'origin', 'Expect-CT': 'max-age=0', 'Expires': 'Fri, 02 Oct 2020 17:45:10 GMT', 'Cache-Control': 'no-cache', 'Accept-Ranges': 'bytes'})
+Verify_mode: VerifyMode.CERT_REQUIRED
+TLS context options: Options.OP_NO_TLSv1_1|OP_NO_TLSv1|OP_NO_SSLv3|OP_CIPHER_SERVER_PREFERENCE|OP_ENABLE_MIDDLEBOX_COMPAT|OP_NO_COMPRESSION|OP_ALL
+[{'id': 50336514, 'name': 'TLS_AES_256_GCM_SHA384', 'protocol': 'TLSv1.3', 'description': 'TLS_AES_256_GCM_SHA384  TLSv1.3 Kx=any      Au=any  Enc=AESGCM(256) Mac=AEAD', 'strength_bits': 256, 'alg_bits': 256, 'aead': True, 'symmetric': 'aes-256-gcm', 'digest': None, 'kea': 'kx-any', 'auth': 'auth-any'},{...}]
+Fri, 02 Oct 2020 17:45:11 GMT returned but not set
 ```
 
 ### Related documentation

@@ -7,4 +7,4 @@ assignees: konstruktoid
 
 ---
 
-A action failed.
+A GitHub action failed.
