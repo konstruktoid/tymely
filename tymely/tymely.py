@@ -179,7 +179,6 @@ def http_date():
         if args.test:
             print(date_str + " returned but not set", file=sys.stdout)
         else:
-            print(date_str, file=sys.stdout)
             os.system('date -s "%s"' % date_str)  # noqa
 
     except Exception as e:
