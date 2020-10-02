@@ -1,0 +1,15 @@
+on: [push, pull_request]
+name: Konstruktoid Python linting
+jobs:
+  konstruktoidPythonlinting:
+    name: Python linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Konstruktoid Python linting
+        uses: konstruktoid/action-pylint@master
+      - name: Create Issue
+        if: failure()
+        uses: JasonEtco/create-an-issue@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
