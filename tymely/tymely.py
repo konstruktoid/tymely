@@ -10,6 +10,8 @@ import sys
 import urllib3
 import yaml
 
+EXCEPTION_STR = "Exception:"
+
 
 def defaults():
     global __minimal__, __url__, __version__
@@ -57,8 +59,7 @@ def config():
             print(conf, file=sys.stdout)
 
     except Exception as e:
-        print("Exception:", str(e), file=sys.stderr)
-        raise
+        print(EXCEPTION_STR, str(e), file=sys.stderr)
         sys.exit(1)
 
     return conf
@@ -76,8 +77,7 @@ def sites():
             url = __url__
 
     except Exception as e:
-        print("Exception:", str(e), file=sys.stderr)
-        raise
+        print(EXCEPTION_STR, str(e), file=sys.stderr)
         sys.exit(1)
 
     if conf.get("verbose", 0):
@@ -101,13 +101,11 @@ def user_agents():
                 user_agent = system_random.choice(conf["user_agents"])
 
         except Exception as e:
-            print("Exception:", str(e), file=sys.stderr)
-            raise
+            print(EXCEPTION_STR, str(e), file=sys.stderr)
             sys.exit(1)
 
     except Exception as e:
-        print("Exception:", str(e), file=sys.stderr)
-        raise
+        print(EXCEPTION_STR, str(e), file=sys.stderr)
         sys.exit(1)
 
     if conf.get("verbose", 0):
@@ -151,8 +149,7 @@ def connection():
         sys.exit(1)
 
     except Exception as e:
-        print("Exception:", str(e), file=sys.stderr)
-        raise
+        print(EXCEPTION_STR, str(e), file=sys.stderr)
         sys.exit(1)
 
     return response
@@ -172,8 +169,7 @@ def http_date():
             ).timestamp()
 
         except Exception as e:
-            print("Exception:", str(e), file=sys.stderr)
-            raise
+            print(EXCEPTION_STR, str(e), file=sys.stderr)
             sys.exit(1)
 
         if args.test:
@@ -182,8 +178,7 @@ def http_date():
             os.system('date -s "%s"' % date_str)  # noqa
 
     except Exception as e:
-        print("Exception:", str(e), file=sys.stderr)
-        raise
+        print(EXCEPTION_STR, str(e), file=sys.stderr)
         sys.exit(1)
 
 
