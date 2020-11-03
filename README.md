@@ -35,8 +35,10 @@ tymely fetches HTTP-date over HTTPS and sets the system time
 optional arguments:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
-                        specifies a configuration file
+                        specifies a CONFiguration file
   -t, --test            don't set the system time, just print the date
+
+version: 0.0.1
 ```
 
 If no configuration file is used,`tymely` will use `https://duckduckgo.com`

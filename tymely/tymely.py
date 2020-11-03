@@ -1,35 +1,40 @@
 #!/usr/bin/env python3
+"""tymely fetches HTTP-date over HTTPS and sets the system time."""
 
 import argparse
-import certifi
 import datetime
 import os
 import random
+import shutil
 import ssl
+import subprocess  # noqa
 import sys
+import certifi
 import urllib3
 import yaml
 
+__minimal__ = "{'verbose': 0}"
+__url__ = "duckduckgo.com"
+__version__ = "0.0.1"
+
+ARGS = None
+CONF = None
 EXCEPTION_STR = "Exception:"
-
-
-def defaults():
-    global __minimal__, __url__, __version__
-
-    __minimal__ = "{'verbose': 0}"
-    __url__ = "duckduckgo.com"
-    __version__ = "0.0.1"
+RESPONSE = None
+URL = None
+USER_AGENT = None
 
 
 def arguments():
-    global args
+    """Command line arguments and help information."""
+    global ARGS
 
     parser = argparse.ArgumentParser(
         description="tymely fetches HTTP-date over HTTPS and sets the system time",
         epilog="version: " + __version__,
     )
     parser.add_argument(
-        "-c", "--config", help="specifies a configuration file", type=str
+        "-c", "--config", help="specifies a CONFiguration file", type=str
     )
     parser.add_argument(
         "-t",
@@ -38,56 +43,71 @@ def arguments():
         action="store_true",
     )
 
-    args = parser.parse_args()
+    ARGS = parser.parse_args()
 
 
 def config():
-    global conf
+    """Returns CONF with yaml configuration files or default values."""
+    global CONF
 
     try:
-        if args.config and os.path.isfile(args.config):
-            with open(args.config, "r") as f:
-                conf = yaml.safe_load(f)
-                conf_file = args.config
+        if ARGS.config:
+            if not os.path.isfile(ARGS.config):
+                print(ARGS.config, "can't be found.")
+                sys.exit(1)
+            else:
+                with open(ARGS.config, "r") as args_file:
+                    CONF = yaml.safe_load(args_file)
+                    conf_file = ARGS.config
         else:
-            conf = yaml.safe_load(__minimal__)
+            CONF = yaml.safe_load(__minimal__)
             conf_file = "None"
 
-        if conf.get("verbose", 0):
+        if CONF.get("verbose", 0):
             print("Verbose mode enabled", file=sys.stdout)
             print("Configuration file:", conf_file, file=sys.stdout)
-            print(conf, file=sys.stdout)
+            print(CONF, file=sys.stdout)
 
-    except Exception as e:
-        print(EXCEPTION_STR, str(e), file=sys.stderr)
+    except IOError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
         sys.exit(1)
 
-    return conf
+    except KeyError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
+        sys.exit(1)
+
+    except UnboundLocalError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
+        sys.exit(1)
+
+    return CONF
 
 
 def sites():
-    global url
+    """Get site URLs from configuration file or use default."""
+    global URL
 
     try:
         system_random = random.SystemRandom()
-        url = conf.get("sites", False)
-        if url:
-            url = system_random.choice(conf["sites"])
+        URL = CONF.get("sites", False)
+        if URL:
+            URL = system_random.choice(CONF["sites"])
         else:
-            url = __url__
+            URL = __url__
 
-    except Exception as e:
-        print(EXCEPTION_STR, str(e), file=sys.stderr)
+    except UnboundLocalError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
         sys.exit(1)
 
-    if conf.get("verbose", 0):
-        print("URL:", url, file=sys.stdout)
+    if CONF.get("verbose", 0):
+        print("URL:", URL, file=sys.stdout)
 
-    return url
+    return URL
 
 
 def user_agents():
-    global user_agent
+    """Get user agents from configuration file or use default."""
+    global USER_AGENT
 
     try:
         system_random = random.SystemRandom()
@@ -96,26 +116,27 @@ def user_agents():
             tymely_version = __version__
             tymely_agent = "tymely/" + tymely_version
 
-            user_agent = conf.get("user_agents", tymely_agent)
-            if user_agent != tymely_agent:
-                user_agent = system_random.choice(conf["user_agents"])
+            USER_AGENT = CONF.get("user_agents", tymely_agent)
+            if USER_AGENT != tymely_agent:
+                USER_AGENT = system_random.choice(CONF["user_agents"])
 
-        except Exception as e:
-            print(EXCEPTION_STR, str(e), file=sys.stderr)
+        except UnboundLocalError as exception_string:
+            print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
             sys.exit(1)
 
-    except Exception as e:
-        print(EXCEPTION_STR, str(e), file=sys.stderr)
+    except UnboundLocalError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
         sys.exit(1)
 
-    if conf.get("verbose", 0):
-        print("User agent:", user_agent, file=sys.stdout)
+    if CONF.get("verbose", 0):
+        print("User agent:", USER_AGENT, file=sys.stdout)
 
-    return user_agent
+    return USER_AGENT
 
 
 def connection():
-    global response
+    """Configure TLS and return the response."""
+    global RESPONSE
 
     tls_cont = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
     tls_cont.options |= ssl.OP_NO_SSLv2
@@ -132,58 +153,52 @@ def connection():
     )
 
     try:
-        response = https.request(
+        RESPONSE = https.request(
             "HEAD",
-            "https://" + url,
-            headers={"User-Agent": user_agent},
+            "https://" + URL,
+            headers={"User-Agent": USER_AGENT},
         )
 
-        if conf.get("verbose", 0):
-            print("Response headers:", response.headers, file=sys.stdout)
+        if CONF.get("verbose", 0):
+            print("Response headers:", RESPONSE.headers, file=sys.stdout)
             print("Verify_mode:", tls_cont.verify_mode)
             print("TLS context options:", tls_cont.options)
             print(tls_cont.get_ciphers())
 
     except urllib3.exceptions.NewConnectionError:
-        print("Connection failed to", url, file=sys.stderr)
+        print("Connection failed to", URL, file=sys.stderr)
         sys.exit(1)
 
-    except Exception as e:
-        print(EXCEPTION_STR, str(e), file=sys.stderr)
+    except UnboundLocalError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
         sys.exit(1)
 
-    return response
+    return RESPONSE
 
 
 def http_date():
+    """Return the http-date from URL using USER_AGENT."""
     try:
-        if response.status != 200:
-            print("Response code", response.status, "from", url, file=sys.stderr)
+        if RESPONSE.status != 200:
+            print("Response code", RESPONSE.status, "from", URL, file=sys.stderr)
             sys.exit(1)
 
-        date_str = response.headers["Date"]
+        date_str = RESPONSE.headers["Date"]
 
-        try:
-            datetime.datetime.strptime(
-                date_str, "%a, %d %b %Y %H:%M:%S GMT"
-            ).timestamp()
+        datetime.datetime.strptime(date_str, "%a, %d %b %Y %H:%M:%S GMT").timestamp()
 
-        except Exception as e:
-            print(EXCEPTION_STR, str(e), file=sys.stderr)
-            sys.exit(1)
-
-        if args.test:
+        if ARGS.test:
             print(date_str + " returned but not set", file=sys.stdout)
         else:
-            os.system('date -s "%s"' % date_str)  # noqa
+            date_cmd = shutil.which("date")
+            subprocess.run([date_cmd, "-s", date_str], shell=False, check=True)  # noqa
 
-    except Exception as e:
-        print(EXCEPTION_STR, str(e), file=sys.stderr)
+    except UnboundLocalError as exception_string:
+        print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
         sys.exit(1)
 
 
 if __name__ == "__main__":
-    defaults()
     arguments()
     config()
     sites()
