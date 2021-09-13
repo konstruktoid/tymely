@@ -56,7 +56,7 @@ def config():
                 print(ARGS.config, "can't be found.")
                 sys.exit(1)
             else:
-                with open(ARGS.config, "r") as args_file:
+                with open(ARGS.config, "r", encoding="utf-8") as args_file:
                     CONF = yaml.safe_load(args_file)
                     conf_file = ARGS.config
         else:
