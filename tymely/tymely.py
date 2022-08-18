@@ -7,7 +7,7 @@ import os
 import random
 import shutil
 import ssl
-import subprocess  # noqa
+import subprocess  # nosec B404
 import sys
 import certifi
 import urllib3
@@ -191,7 +191,9 @@ def http_date():
             print(date_str + " returned but not set", file=sys.stdout)
         else:
             date_cmd = shutil.which("date")
-            subprocess.run([date_cmd, "-s", date_str], shell=False, check=True)  # noqa
+            subprocess.run(
+                [date_cmd, "-s", date_str], shell=False, check=True  # nosec B603
+            )
 
     except UnboundLocalError as exception_string:
         print(EXCEPTION_STR, str(exception_string), file=sys.stderr)
