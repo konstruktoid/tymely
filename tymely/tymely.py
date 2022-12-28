@@ -131,9 +131,9 @@ def main():
             date_cmd = shutil.which("date")
             subprocess.run(
                 [date_cmd, "-s", date_str],
-                shell=False,
+                shell=False,  # nosec B603
                 check=True,
-            )  # nosec B603,S603
+            )
     except UnboundLocalError as exception_string:
         print("Exception:", str(exception_string), file=sys.stderr)
         sys.exit(1)
