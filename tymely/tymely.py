@@ -25,7 +25,7 @@ def arguments():
         epilog="version: " + __version__,
     )
     parser.add_argument(
-        "-c", "--config", help="specifies a CONFiguration file", type=str
+        "-c", "--config", help="specifies a configuration file", type=str
     )
     parser.add_argument(
         "-t",
