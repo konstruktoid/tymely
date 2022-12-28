@@ -2,4 +2,4 @@ argparse
 certifi
 datetime
 pyyaml
-urllib3
+requests

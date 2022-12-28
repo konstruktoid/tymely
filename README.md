@@ -64,15 +64,19 @@ sites:
   - "cloudflare.com"
   - "duckduckgo.com"
   - "github.com"
+  - "proton.me"
   - "stackoverflow.com"
   - "xkcd.com"
 user_agents:
   - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
+  - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
   - "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.54"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0"
   - "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko"
   - "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
   - "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0"
-...
 ```
 
 The above configuration will make `tymely` randomly choose a site and user agent
@@ -82,18 +86,12 @@ from the lists presented in the file, and verbosely return any information.
 $ ./tymely.py -c tymely.yaml -t
 Verbose mode enabled
 Configuration file: tymely.yaml
-{'verbose': 1, 'sites': ['cloudflare.com', 'duckduckgo.com', 'github.com', 'stackoverflow.com', 'xkcd.com'], 'user_agents': ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.
-169 Safari/537.36', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36', 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like
-Gecko', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0']}
-URL: duckduckgo.com
-User agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36
-Response headers: HTTPHeaderDict({'Server': 'nginx', 'Date': 'Fri, 02 Oct 2020 17:45:11 GMT', 'Content-Type': 'text/html; charset=UTF-8', 'Content-Length': '5763', 'Connection': 'keep-alive', 'Vary': 'Accept-Encoding', 'ETag': '"5
-f761b76-1683"', 'Strict-Transport-Security': 'max-age=31536000', 'X-Frame-Options': 'SAMEORIGIN', 'Content-Security-Policy': "default-src https: blob: data: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self'", 'X-XSS-Protection
-': '1;mode=block', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'origin', 'Expect-CT': 'max-age=0', 'Expires': 'Fri, 02 Oct 2020 17:45:10 GMT', 'Cache-Control': 'no-cache', 'Accept-Ranges': 'bytes'})
-Verify_mode: VerifyMode.CERT_REQUIRED
-TLS context options: Options.OP_NO_TLSv1_1|OP_NO_TLSv1|OP_NO_SSLv3|OP_CIPHER_SERVER_PREFERENCE|OP_ENABLE_MIDDLEBOX_COMPAT|OP_NO_COMPRESSION|OP_ALL
-[{'id': 50336514, 'name': 'TLS_AES_256_GCM_SHA384', 'protocol': 'TLSv1.3', 'description': 'TLS_AES_256_GCM_SHA384  TLSv1.3 Kx=any      Au=any  Enc=AESGCM(256) Mac=AEAD', 'strength_bits': 256, 'alg_bits': 256, 'aead': True, 'symmetric': 'aes-256-gcm', 'digest': None, 'kea': 'kx-any', 'auth': 'auth-any'},{...}]
-Fri, 02 Oct 2020 17:45:11 GMT returned but not set
+{'verbose': 1, 'sites': ['cloudflare.com', 'duckduckgo.com', 'github.com', 'proton.me', 'stackoverflow.com', 'xkcd.com'], 'user_agents': ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15', 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 YaBrowser/19.6.2.599 Yowser/2.5 Safari/537.36', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.54', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0', 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:66.0) Gecko/20100101 Firefox/66.0']}
+URL: proton.me
+User agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:108.0) Gecko/20100101 Firefox/108.0
+Response headers: {'date': 'Wed, 28 Dec 2022 15:38:52 GMT', 'set-cookie': 'Session-Id=Y6xjDCybqTYU-tqqBvhDmwAAABo; Domain=proton.me; Path=/; HttpOnly; Secure; Max-Age=7776000, Tag=default; Path=/; Secure; Max-Age=7776000', 'last-modified': 'Wed, 28 Dec 2022 10:24:00 GMT', 'accept-ranges': 'bytes', 'cache-control': 'max-age=0, no-cache, no-store, must-revalidate', 'expires': 'Wed, 11 Jan 1984 05:00:00 GMT', 'vary': 'Accept-Encoding', 'content-encoding': 'gzip', 'pragma': 'no-cache', 'content-length': '21937', 'content-type': 'text/html; charset=utf-8', 'content-security-policy-report-only': "default-src 'self'; media-src https://static.zdassets.com; connect-src 'self' wss: https://protonmail.zendesk.com https://ekr.zdassets.com blob: https://account.proton.me https://reports.proton.me https://*.algolia.net https://*.algolianet.com; script-src 'self' blob: 'unsafe-eval' 'unsafe-inline'  https://static.zdassets.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; object-src 'self' data: blob:; frame-src 'self' data: blob: https://www.youtube-nocookie.com; child-src 'self' data: blob:; report-uri https://reports.proton.me/reports/csp; frame-ancestors 'self';", 'strict-transport-security': 'max-age=31536000; includeSubDomains; preload', 'expect-ct': 'max-age=2592000, enforce, report-uri="https://reports.protonmail.com/reports/tls"', 'public-key-pins-report-only': 'pin-sha256="CT56BhOTmj5ZIPgb/xD5mH8rY3BLo/MlhP7oPyJUEDo="; report-uri="https://reports.protonmail.com/reports/tls"', 'x-frame-options': 'sameorigin', 'x-content-type-options': 'nosniff', 'x-xss-protection': '0', 'referrer-policy': 'strict-origin-when-cross-origin', 'x-permitted-cross-domain-policies': 'none', 'onion-location': 'https://protonmailrmez3lotccipshtkleegetolb73fuirgj7r4o4vfu7ozyd.onion/'}
+Verify_mode: /etc/ssl/certs/ca-certificates.crt
+Wed, 28 Dec 2022 15:38:52 GMT from proton.me returned but not set
 ```
 
 ### Related documentation
