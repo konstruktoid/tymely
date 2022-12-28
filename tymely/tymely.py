@@ -111,7 +111,6 @@ def main():
 
         if conf.get("verbose", 0):
             print("Response headers:", response.headers, file=sys.stdout)
-            print("Verify_mode:", requests.certs.where())
     except requests.exceptions.ConnectionError:
         print("Connection failed to", url, file=sys.stderr)
         sys.exit(1)
