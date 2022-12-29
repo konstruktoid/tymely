@@ -32,13 +32,13 @@ usage: tymely.py [-h] [-c CONFIG] [-t]
 
 tymely fetches HTTP-date over HTTPS and sets the system time
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
-                        specifies a CONFiguration file
+                        specifies a configuration file
   -t, --test            don't set the system time, just print the date
 
-version: 0.0.1
+version: 0.1.0
 ```
 
 If no configuration file is used,`tymely` will use `https://duckduckgo.com`
