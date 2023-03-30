@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # master
       - name: Python linting
-        uses: konstruktoid/action-pylint@2204f17e2b1136831f51dba9349607dd3a3e88a7 # master
+        uses: konstruktoid/action-pylint@75cc025cc2f7a63d0ede433cc0bc6055d14c7e3a # master
