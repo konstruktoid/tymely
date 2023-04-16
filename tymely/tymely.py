@@ -5,11 +5,12 @@ import argparse
 import datetime
 import os
 import random
+import shutil
 import subprocess  # nosec B404,S404
 import sys
-import shutil
-import requests
+
 import certifi
+import requests
 import yaml
 
 __version__ = "0.1.0"
@@ -25,7 +26,10 @@ def arguments():
         epilog="version: " + __version__,
     )
     parser.add_argument(
-        "-c", "--config", help="specifies a configuration file", type=str
+        "-c",
+        "--config",
+        help="specifies a configuration file",
+        type=str,
     )
     parser.add_argument(
         "-t",
@@ -48,7 +52,7 @@ def config(args):
                 print(args.config, "can't be found.")
                 sys.exit(1)
             else:
-                with open(args.config, "r", encoding="utf-8") as args_file:
+                with open(args.config, encoding="utf-8") as args_file:
                     conf = yaml.safe_load(args_file)
         else:
             conf = {"verbose": 0}
@@ -100,6 +104,8 @@ def main():
     conf = config(args)
     url, user_agent = get_site_and_agent(conf)
 
+    http_ok_response = 200
+
     try:
         response = requests.head(
             "https://" + url,
@@ -116,13 +122,16 @@ def main():
         sys.exit(1)
 
     try:
-        if response.status_code != 200:
+        if response.status_code != http_ok_response:
             print("Response code", response.status_code, "from", url, file=sys.stderr)
             sys.exit(1)
 
         date_str = response.headers["Date"]
 
-        datetime.datetime.strptime(date_str, "%a, %d %b %Y %H:%M:%S GMT").timestamp()
+        datetime.datetime.strptime(
+            date_str,
+            "%a, %d %b %Y %H:%M:%S GMT",
+        ).astimezone().timestamp()
 
         if args.test:
             print(f"{date_str} from {url} returned but not set", file=sys.stdout)
