@@ -139,7 +139,7 @@ def main():
             date_cmd = shutil.which("date")
             subprocess.run(
                 [date_cmd, "-s", date_str],
-                shell=False,  # nosec B603
+                shell=False,  # noqa=S603
                 check=True,
             )
     except UnboundLocalError as exception_string:
