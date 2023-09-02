@@ -20,7 +20,7 @@ jobs:
         shell: bash
 
       - name: Checkout repository
-        uses: actions/checkout@97a652b80035363df47baee5031ec8670b8878ac # master
+        uses: actions/checkout@8b5e8b768746b50394015010d25e690bfab9dfbc # master
 
       - name: Build artifacts
         run: |
