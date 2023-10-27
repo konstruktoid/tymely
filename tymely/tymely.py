@@ -17,8 +17,7 @@ __version__ = "0.1.0"
 
 
 def arguments():
-    """
-    Parse command line arguments using argparse module and return the parsed
+    """Parse command line arguments using argparse module and return the parsed
     arguments.
     """
     parser = argparse.ArgumentParser(
@@ -42,8 +41,7 @@ def arguments():
 
 
 def config(args):
-    """
-    Read and parse the configuration file specified in the command line arguments.
+    """Read and parse the configuration file specified in the command line arguments.
     Return the configuration as a dictionary.
     """
     try:
@@ -71,8 +69,7 @@ def config(args):
 
 
 def get_site_and_agent(conf):
-    """
-    Choose a site and user agent string from the configuration dictionary.
+    """Choose a site and user agent string from the configuration dictionary.
     Return the site URL and user agent string.
     """
     user_agent = None
@@ -96,8 +93,7 @@ def get_site_and_agent(conf):
 
 
 def main():
-    """
-    Main function that fetches the current date over HTTPS, sets the system time
+    """Main function that fetches the current date over HTTPS, sets the system time
     if not in test mode, and prints the date if in test mode.
     """
     args = arguments()
@@ -139,7 +135,7 @@ def main():
             date_cmd = shutil.which("date")
             subprocess.run(
                 [date_cmd, "-s", date_str],
-                shell=False,  # noqa=S603
+                shell=False,  # noqa: S603
                 check=True,
             )
     except UnboundLocalError as exception_string:
