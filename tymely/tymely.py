@@ -133,9 +133,9 @@ def main():
             print(f"{date_str} from {url} returned but not set", file=sys.stdout)
         else:
             date_cmd = shutil.which("date")
-            subprocess.run(
+            subprocess.run(  # noqa: S603
                 [date_cmd, "-s", date_str],
-                shell=False,  # noqa: S603
+                shell=False,
                 check=True,
             )
     except UnboundLocalError as exception_string:
