@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201
 """tymely fetches HTTP-date over HTTPS and sets the system time."""
 
 import argparse
 import datetime
-import os
-import random
+import secrets
 import shutil
 import subprocess  # nosec B404,S404
 import sys
+from pathlib import Path
 
 import certifi
 import requests
@@ -16,10 +17,8 @@ import yaml
 __version__ = "0.1.0"
 
 
-def arguments():
-    """Parse command line arguments using argparse module and return the parsed
-    arguments.
-    """
+def arguments() -> any:
+    """Parse command line arguments and return the arguments."""
     parser = argparse.ArgumentParser(
         description="tymely fetches HTTP-date over HTTPS and sets the system time",
         epilog="version: " + __version__,
@@ -40,17 +39,18 @@ def arguments():
     return parser.parse_args()
 
 
-def config(args):
+def config(args: any) -> any:
     """Read and parse the configuration file specified in the command line arguments.
+
     Return the configuration as a dictionary.
     """
     try:
         if args.config:
-            if not os.path.isfile(args.config):
+            if not Path(args.config).is_file():
                 print(args.config, "can't be found.")
                 sys.exit(1)
             else:
-                with open(args.config, encoding="utf-8") as args_file:
+                with Path.open(args.config, encoding="utf-8") as args_file:
                     conf = yaml.safe_load(args_file)
         else:
             conf = {"verbose": 0}
@@ -68,22 +68,23 @@ def config(args):
     return conf
 
 
-def get_site_and_agent(conf):
+def get_site_and_agent(conf: str) -> str:
     """Choose a site and user agent string from the configuration dictionary.
+
     Return the site URL and user agent string.
     """
     user_agent = None
 
     if conf.get("sites"):
         url = conf.get("sites", False)
-        url = random.SystemRandom().choice(url)
+        url = secrets.choice(url)
     else:
         url = "duckduckgo.com"
 
     tymely_agent = "tymely/" + __version__
     user_agent = conf.get("user_agents", tymely_agent)
     if user_agent != tymely_agent:
-        user_agent = random.SystemRandom().choice(conf["user_agents"])
+        user_agent = secrets.choice(conf["user_agents"])
 
     if conf.get("verbose", 0):
         print("URL:", url, file=sys.stdout)
@@ -92,10 +93,8 @@ def get_site_and_agent(conf):
     return url, user_agent
 
 
-def main():
-    """Main function that fetches the current date over HTTPS, sets the system time
-    if not in test mode, and prints the date if in test mode.
-    """
+def main() -> None:
+    """Fetch the current date over HTTPS, sets the system time if not in test mode."""
     args = arguments()
     conf = config(args)
     url, user_agent = get_site_and_agent(conf)
