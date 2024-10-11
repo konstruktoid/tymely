@@ -29,7 +29,7 @@ jobs:
 
       - name: Build artifacts
         run: |
-          find tymely -type f -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha25
+          find tymely -type f -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha256
 
       - name: Generate hashes
         shell: bash
