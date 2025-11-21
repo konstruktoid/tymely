@@ -12,5 +12,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv venv
+          source .venv/bin/activate
+          uv pip install -U -r requirements.txt
+
       - name: Python linting
         uses: konstruktoid/action-pylint@v2.1.0

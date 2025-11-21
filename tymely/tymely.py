@@ -3,22 +3,26 @@
 """tymely fetches HTTP-date over HTTPS and sets the system time."""
 
 import argparse
+import asyncio
 import datetime
 import secrets
 import shutil
+import ssl
 import subprocess  # nosec B404,S404
 import sys
 from pathlib import Path
+from typing import Any
 
+import aiohttp
 import certifi
-import requests
 import yaml
+from aiohttp.typedefs import LooseHeaders
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
-def arguments() -> any:
-    """Parse command line arguments and return the arguments."""
+def arguments() -> argparse.Namespace:
+    """Parse and return command-line arguments."""
     parser = argparse.ArgumentParser(
         description="tymely fetches HTTP-date over HTTPS and sets the system time",
         epilog="version: " + __version__,
@@ -35,23 +39,19 @@ def arguments() -> any:
         help="don't set the system time, just print the date",
         action="store_true",
     )
-
     return parser.parse_args()
 
 
-def config(args: any) -> any:
-    """Read and parse the configuration file specified in the command line arguments.
-
-    Return the configuration as a dictionary.
-    """
+def config(args: argparse.Namespace) -> dict[str, Any]:
+    """Load and parse the configuration file."""
     try:
         if args.config:
-            if not Path(args.config).is_file():
+            config_path = Path(args.config)
+            if not config_path.is_file():
                 print(args.config, "can't be found.")
                 sys.exit(1)
-            else:
-                with Path.open(args.config, encoding="utf-8") as args_file:
-                    conf = yaml.safe_load(args_file)
+            with config_path.open(encoding="utf-8") as args_file:
+                conf: dict[str, Any] = yaml.safe_load(args_file)
         else:
             conf = {"verbose": 0}
 
@@ -59,32 +59,28 @@ def config(args: any) -> any:
             print("Verbose mode enabled", file=sys.stdout)
             print("Configuration file:", args.config, file=sys.stdout)
             print(conf, file=sys.stdout)
-    except KeyError as exception_string:
+
+    except (KeyError, UnboundLocalError) as exception_string:
         print("Exception:", str(exception_string), file=sys.stderr)
         sys.exit(1)
-    except UnboundLocalError as exception_string:
-        print("Exception:", str(exception_string), file=sys.stderr)
-        sys.exit(1)
+
     return conf
 
 
-def get_site_and_agent(conf: str) -> str:
-    """Choose a site and user agent string from the configuration dictionary.
-
-    Return the site URL and user agent string.
-    """
-    user_agent = None
-
+def get_site_and_agent(conf: dict[str, Any]) -> tuple[str, str]:
+    """Select a random site and user-agent string."""
     if conf.get("sites"):
-        url = conf.get("sites", False)
-        url = secrets.choice(url)
+        url: str = secrets.choice(conf["sites"])
     else:
         url = "duckduckgo.com"
 
     tymely_agent = "tymely/" + __version__
-    user_agent = conf.get("user_agents", tymely_agent)
-    if user_agent != tymely_agent:
-        user_agent = secrets.choice(conf["user_agents"])
+    user_agent_default: str = conf.get("user_agents", tymely_agent)
+
+    if user_agent_default != tymely_agent:
+        user_agent: str = secrets.choice(conf["user_agents"])
+    else:
+        user_agent = tymely_agent
 
     if conf.get("verbose", 0):
         print("URL:", url, file=sys.stdout)
@@ -93,53 +89,78 @@ def get_site_and_agent(conf: str) -> str:
     return url, user_agent
 
 
-def main() -> None:
-    """Fetch the current date over HTTPS, sets the system time if not in test mode."""
-    args = arguments()
-    conf = config(args)
+async def fetch_head(
+    url: str,
+    user_agent: str,
+    verbose: int,
+) -> tuple[int, LooseHeaders]:
+    """Send an request and return the status and response headers."""
+    ssl_context = ssl.create_default_context(cafile=certifi.where())
+
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.head(
+                "https://" + url,
+                headers={"User-Agent": user_agent},
+                ssl=ssl_context,
+                allow_redirects=True,
+                timeout=aiohttp.ClientTimeout(total=1.0),
+            ) as response:
+                if verbose:
+                    print("Response headers:", dict(response.headers), file=sys.stdout)
+
+                # response.headers is a CIMultiDict (compatible with LooseHeaders)
+                return response.status, response.headers
+
+        except aiohttp.ClientError:
+            print("Connection failed to", url, file=sys.stderr)
+            sys.exit(1)
+
+
+async def main_async() -> None:
+    """Fetch current time and optionally set the system clock."""
+    args: argparse.Namespace = arguments()
+    conf: dict[str, Any] = config(args)
     url, user_agent = get_site_and_agent(conf)
 
-    http_ok_response = 200
+    status, headers = await fetch_head(url, user_agent, conf.get("verbose", 0))
+    status_ok = 200
 
-    try:
-        response = requests.head(
-            "https://" + url,
-            headers={"User-Agent": user_agent},
-            verify=certifi.where(),
-            allow_redirects=True,
-            timeout=1.0,
-        )
-
-        if conf.get("verbose", 0):
-            print("Response headers:", response.headers, file=sys.stdout)
-    except requests.exceptions.ConnectionError:
-        print("Connection failed to", url, file=sys.stderr)
+    if status != status_ok:
+        print("Response code", status, "from", url, file=sys.stderr)
         sys.exit(1)
 
     try:
-        if response.status_code != http_ok_response:
-            print("Response code", response.status_code, "from", url, file=sys.stderr)
-            sys.exit(1)
+        date_str = headers["Date"]  # ty: ignore
 
-        date_str = response.headers["Date"]
-
+        # Validate format
         datetime.datetime.strptime(
             date_str,
             "%a, %d %b %Y %H:%M:%S GMT",
         ).astimezone().timestamp()
 
+        # Test mode: don't change system time
         if args.test:
             print(f"{date_str} from {url} returned but not set", file=sys.stdout)
-        else:
-            date_cmd = shutil.which("date")
-            subprocess.run(  # noqa: S603
-                [date_cmd, "-s", date_str],
-                shell=False,
-                check=True,
-            )
-    except UnboundLocalError as exception_string:
-        print("Exception:", str(exception_string), file=sys.stderr)
+            return
+
+        date_cmd: str | None = shutil.which("date")
+        subprocess.run(  # noqa: S603, ASYNC221
+            [date_cmd, "-s", date_str],
+            shell=False,
+            check=True,
+        )
+
+    except KeyError:
+        print("No Date header returned", file=sys.stderr)
         sys.exit(1)
+    except subprocess.CalledProcessError:
+        sys.exit(1)
+
+
+def main() -> None:
+    """Entry point."""
+    asyncio.run(main_async())
 
 
 if __name__ == "__main__":
