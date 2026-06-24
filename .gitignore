@@ -1,5 +1,6 @@
+tymely.egg-info
 __pycache__
-.sonar
 .scannerwork
+.sonar
 .tox
 .vagrant/
