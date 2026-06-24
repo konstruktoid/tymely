@@ -1,13 +1,16 @@
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 name: Python linting
-
-permissions:
-  contents: read
-
+permissions: {}
 jobs:
   PythonLinting:
     name: Python linting
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -18,7 +21,7 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           uv venv
           source .venv/bin/activate
-          uv pip install -U -r requirements.txt
+          uv pip install -U -r pyproject.toml
 
       - name: Python linting
-        uses: konstruktoid/action-pylint@v2.1.0
+        uses: konstruktoid/action-pylint@v3
