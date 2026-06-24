@@ -144,7 +144,11 @@ async def main_async() -> None:
             print(f"{date_str} from {url} returned but not set", file=sys.stdout)
             return
 
-        date_cmd: str | None = shutil.which("date")
+        date_cmd = shutil.which("date")
+        if date_cmd is None:
+            print("'date' command not found", file=sys.stderr)
+            sys.exit(1)
+
         subprocess.run(  # noqa: S603, ASYNC221
             [date_cmd, "-s", date_str],
             shell=False,
