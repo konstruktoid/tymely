@@ -23,5 +23,6 @@ jobs:
           source .venv/bin/activate
           uv pip install -U -r pyproject.toml
 
-      - name: Python linting
-        uses: konstruktoid/action-pylint@v3
+      - name: Python quality and format checker
+        uses: konstruktoid/action-pylint@v3.0.0
+
